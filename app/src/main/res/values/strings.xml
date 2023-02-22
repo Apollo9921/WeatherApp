@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">WeatherApp</string>
+    <string name="enableLocation">Your Location seems to be disabled, enable it and try again</string>
+    <string name="tryAgain">Try Again</string>
+    <string name="noInternet">No internet connection, please turn on and click here to refresh</string>
+    <string name="permissionLocation">The location is important for this app. Please grant the permission</string>
+    <string name="requiredLocation">Location permission required for this feature to be available. Please grant the permission</string>
+    <string name="requestPermission">Request permission</string>
+    <string name="errorMessage">Something went wrong, please click here to try again</string>
+</resources>
