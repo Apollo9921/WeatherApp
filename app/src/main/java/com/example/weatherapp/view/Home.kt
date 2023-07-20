@@ -43,6 +43,7 @@ private var cancel = mutableStateOf(false)
 private var error = mutableStateOf(false)
 private var success = mutableStateOf(false)
 private var clicked = mutableStateOf(false)
+var cityName = mutableStateOf("")
 private lateinit var weather: Weather
 private var itemID = ""
 private var id = 0
@@ -156,10 +157,14 @@ private fun TopBar() {
             )
         )
         Spacer(modifier = Modifier.padding(start = 10.dp))
-        val cityName = getCityName(context, latitude.value.toDouble(), longitude.value.toDouble())
-        if (cityName.isNotEmpty()) {
+        getCityName(
+            context,
+            latitude.value.toDouble(),
+            longitude.value.toDouble()
+        )
+        if (cityName.value.isNotBlank()) {
             Text(
-                text = cityName,
+                text = cityName.value,
                 color = White,
                 fontSize =
                 if (mediaQueryWidth() <= small) {
@@ -454,12 +459,15 @@ private fun GetResult(navHostController: NavHostController) {
         !internet.value -> {
             NoInternet(context)
         }
+
         success.value -> {
             HomeUI(navHostController)
         }
+
         error.value -> {
             Error(context)
         }
+
         cancel.value -> {
             NoInternet(context)
         }
@@ -488,10 +496,12 @@ fun GetWeather() {
                     loading.value = false
                     cancel.value = true
                 }
+
                 HomeViewModel.GetWeatherUIState.Error -> {
                     loading.value = false
                     error.value = true
                 }
+
                 is HomeViewModel.GetWeatherUIState.Success -> {
                     weather = it.weather
                     loading.value = false

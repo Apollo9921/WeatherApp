@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherapp.R
 import com.example.weatherapp.view.GetWeather
+import com.example.weatherapp.view.cityName
 import com.example.weatherapp.view.internet.checkInternetConnection
 import com.example.weatherapp.view.theme.Black
 import com.example.weatherapp.view.theme.Thunder
@@ -88,15 +89,17 @@ fun BuildAlertMessageNoGps(context: Context) {
                 textAlign = TextAlign.Center
             )
         },
-        buttons = {
+        confirmButton = {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(onClick = {
-                    runBlocking { delay(500) }
-                    statusCheck(context)
+                    runBlocking {
+                        delay(500)
+                        statusCheck(context)
+                    }
                 }) {
                     Text(
                         text = stringResource(id = R.string.tryAgain),
@@ -118,26 +121,24 @@ fun BuildAlertMessageNoGps(context: Context) {
     )
 }
 
-fun getCityName(context: Context, lat: Double, long: Double): String {
-    var cityName: String? = null
+fun getCityName(context: Context, lat: Double, long: Double) {
     val geoCoder = Geocoder(context, Locale.getDefault())
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         geoCoder.getFromLocation(
             lat, long, 1
         ) { addresses ->
-            cityName = addresses[0].adminArea
+            cityName.value = addresses[0].adminArea
             if (addresses[0].locality != null) {
-                cityName = addresses[0].locality
+                cityName.value = addresses[0].locality
             }
         }
     } else {
         val address: MutableList<Address>? = geoCoder.getFromLocation(lat, long, 1)
-        cityName = address!![0].adminArea
+        cityName.value = address!![0].adminArea
         if (address[0].locality != null) {
-            cityName = address[0].locality
+            cityName.value = address[0].locality
         }
     }
-    return cityName!!
 }
 
 @Composable
@@ -262,7 +263,7 @@ fun RequestPermissions() {
                     textAlign = TextAlign.Center
                 )
             },
-            buttons = {
+            confirmButton = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.Bottom,
@@ -330,7 +331,7 @@ fun RequestPermissions() {
                     textAlign = TextAlign.Center
                 )
             },
-            buttons = {
+            confirmButton = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.Bottom,
